@@ -1,0 +1,54 @@
+name: nuxt
+type: service
+from: node
+fromVersionConstraint: "^2.0.0"
+fromVersion: "2.1.3"
+guidance: GUIDANCE.md
+title: Node.js (Nuxt)
+labels:
+- nuxt
+- node
+
+env:
+- name: WORKSPACE_NODE_COMMAND
+  value: exec node node_modules/nuxt/bin/nuxt.mjs dev --host "$HOST" --port "$PORT" --strictPort
+- name: NODE_ENV
+  value: production
+  envType: dev
+- name: NUXT_APP_SECRET
+  value: '{{nuxt_app_secret}}'
+  secret: true
+
+# Nuxt's application secret, used by its sessions and the secrets that modules
+# derive from it. Builds never generate one. The first character is a letter so
+# that Nuxt reads the value as a string, not a number.
+tokens:
+- name: nuxt_app_secret
+  generate:
+    regex: '[a-f][0-9a-f]{63}'
+
+build:
+  dockerfile: Dockerfile
+  # The default list, plus what Nuxt generates: .nuxt is written by the
+  # pipeline's npm ci (the postinstall script runs nuxt prepare) and rebuilt by
+  # nuxt build; .output is the build output; .data is Nitro's development storage.
+  dockerignoreContent: |
+    .git
+    .gitignore
+    .dockerignore
+    .wodby-ci-cache
+    .nuxt
+    .output
+    .data
+  connect: true
+  boilerplates:
+  - name: nuxt
+    title: Nuxt Boilerplate
+    repo: https://github.com/wodby/nuxt-boilerplate
+    branch: main
+
+workspace:
+  reload: watch
+  # Nuxt's generated files, the production build output and Nitro's development
+  # storage.
+  ignore: ['/.nuxt/', '/.output/', '/.data/']
