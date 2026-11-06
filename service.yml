@@ -2,7 +2,7 @@ name: nuxt
 type: service
 from: node
 fromVersionConstraint: "^2.0.0"
-fromVersion: "2.2.0"
+fromVersion: "2.2.1"
 guidance: GUIDANCE.md
 title: Node.js (Nuxt)
 labels:
@@ -11,7 +11,8 @@ labels:
 
 env:
 - name: WORKSPACE_NODE_COMMAND
-  value: exec node node_modules/nuxt/bin/nuxt.mjs dev --host "$HOST" --port "$PORT" --strictPort
+  value: exec node node_modules/nuxt/bin/nuxt.mjs dev --host "$HOST" --port 
+    "$PORT" --strictPort
 - name: NODE_ENV
   value: production
   envType: dev
